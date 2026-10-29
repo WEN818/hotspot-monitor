@@ -1,0 +1,9 @@
+
+cd ~
+deactivate                    # 如果 venv 还激活着
+rm -rf hotspot-monitor        # 删项目（git 历史、代码、数据库一起）
+rm ~/hotspot-monitor-keys.txt # 删密钥
+brew uninstall node@24        # 或你实际装的 node 版本名
+brew uninstall python
+brew autoremove               # 清掉孤儿依赖
+brew cleanup                  # 清缓存

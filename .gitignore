@@ -1,0 +1,7 @@
+venv/
+__pycache__/
+*.pyc
+hotspots.db
+.env
+*keys*.txt
+.DS_Store

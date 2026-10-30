@@ -1,23 +1,31 @@
 import json
 import sqlite3
 import subprocess
+from datetime import datetime, timezone
 from pathlib import Path
 
-# 无论从哪里启动脚本，数据库都放在项目根目录。
 ROOT = Path(__file__).resolve().parent
 DB_PATH = ROOT / "hotspots.db"
 
-# 每个源依次记录：平台名、抓取命令、热度字段名。
+# 平台名、抓取命令、标题字段、热度字段。
 SOURCES = [
     (
         "hackernews",
         ["opencli", "hackernews", "top", "-f", "json"],
+        "title",
         "score",
     ),
     (
         "juejin",
         ["opencli", "juejin", "hot", "-f", "json"],
+        "title",
         "hot_rank",
+    ),
+    (
+        "github",
+        ["opencli", "github-trending", "repos", "-f", "json"],
+        "repo",
+        "starsSince",
     ),
 ]
 
@@ -39,8 +47,8 @@ def init_db(conn):
     conn.commit()
 
 
-def fetch_source(platform, command, heat_field):
-    """调用一个 OpenCLI 源，并转换成数据库需要的记录。"""
+def fetch_source(platform, command, title_field, heat_field):
+    """调用一个 OpenCLI 源，并转换成数据库记录。"""
     result = subprocess.run(
         command,
         capture_output=True,
@@ -70,9 +78,8 @@ def fetch_source(platform, command, heat_field):
 
     posts = []
     for item in data:
-        title = item.get("title")
+        title = item.get(title_field)
 
-        # 没有标题的记录无法入库，跳过单条，不影响其他记录。
         if not title:
             continue
 
@@ -96,22 +103,40 @@ def main():
 
     try:
         init_db(conn)
+
+        # 本次运行只生成一次时间，所有成功平台共享这个批次时间。
+        batch_time = datetime.now(timezone.utc).strftime(
+            "%Y-%m-%d %H:%M:%S"
+        )
+
         total = 0
 
-        for platform, command, heat_field in SOURCES:
+        for platform, command, title_field, heat_field in SOURCES:
             try:
-                posts = fetch_source(platform, command, heat_field)
+                posts = fetch_source(
+                    platform,
+                    command,
+                    title_field,
+                    heat_field,
+                )
             except Exception as exc:
-                # 单个平台失败，只记录错误，继续处理后面的平台。
+                # 单源失败不会阻断后面的源。
                 print(f"[失败] {platform}: {exc}")
                 continue
 
+            # 给每条记录追加同一个批次时间。
+            rows = [
+                post + (batch_time,)
+                for post in posts
+            ]
+
             conn.executemany(
                 """
-                INSERT INTO posts (platform, title, url, heat)
-                VALUES (?, ?, ?, ?)
+                INSERT INTO posts
+                    (platform, title, url, heat, fetched_at)
+                VALUES (?, ?, ?, ?, ?)
                 """,
-                posts,
+                rows,
             )
             conn.commit()
 
@@ -120,7 +145,6 @@ def main():
 
         print(f"本次合计入库：{total} 条")
 
-        # 所有平台都失败时，以非零状态退出，方便以后 cron 识别。
         if total == 0:
             raise SystemExit("错误：所有平台均抓取失败")
 

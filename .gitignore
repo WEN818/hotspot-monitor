@@ -5,3 +5,7 @@ hotspots.db
 .env
 *keys*.txt
 .DS_Store
+logs/
+# 个人学习笔记和交接材料，仅保留本地
+学习笔记/
+notes/项目交接/

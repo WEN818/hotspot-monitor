@@ -1,0 +1,20 @@
+Usage: opencli github <command> [args] [options]
+
+login, whoami
+
+Commands:
+  login [options]  [write] Open github login and wait until the browser session is authenticated
+  whoami           [read] Show the current logged-in github account
+
+Common options:
+  -f, --format <fmt>  Output format: table, plain, json, yaml, md, csv  default: json  choices: table, plain, json, yaml, md, csv
+  --trace <mode>      Trace capture: off, on, retain-on-failure  default: off  choices: off, on, retain-on-failure
+  -v, --verbose       Debug output  default: false
+  -h, --help          display help for command
+
+Browser common options:
+  --window <mode>        Browser window mode: foreground or background  choices: foreground, background
+  --site-session <mode>  Adapter site session lifecycle: ephemeral or persistent  choices: ephemeral, persistent
+  --keep-tab <bool>      Keep the browser tab lease after the command finishes  choices: true, false
+
+Agent tip: use 'opencli github --help -f json' to get all command args/options in one structured response.

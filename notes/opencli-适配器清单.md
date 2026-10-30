@@ -54,3 +54,13 @@
 ## 四、浏览器桥配置记录
 
 > 操作：完成浏览器桥扩展安装并登录知乎/B站后，记录：扩展名称、Chrome 版本、登录验证日期。抓取掉登录态时回看这里。
+
+## 五、2026-10-30 实际验证结果
+
+| 平台 | 实际命令 | 标题字段 | 热度字段 | 状态 |
+| --- | --- | --- | --- | --- |
+| HackerNews | `opencli hackernews top -f json` | `title` | `score` | 成功 |
+| 掘金 | `opencli juejin hot -f json` | `title` | `hot_rank` | 成功 |
+| GitHub Trending | `opencli github-trending repos -f json` | `repo` | `starsSince` | 成功，无需登录 |
+
+三个源的返回结构均为 `ok` + `data` 列表。公开 JSON 样本和命令帮助已保存在本目录，供解析测试与后续维护使用。

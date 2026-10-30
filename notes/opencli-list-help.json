@@ -1,0 +1,13 @@
+Usage: opencli list [options] [query]
+
+Find available capabilities; inspect a command with --help -f json
+
+Arguments:
+  query               Filter command names and descriptions
+
+Options:
+  --site <site>       Only adapters for this site
+  --limit <n>         Maximum results (1–100) (default: 25)
+  --offset <n>        Start offset from the previous result (default: 0)
+  -f, --format <fmt>  json, table, yaml, md, csv (default: "json")
+  -h, --help          display help for command

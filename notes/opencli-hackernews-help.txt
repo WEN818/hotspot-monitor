@@ -1,0 +1,22 @@
+Usage: opencli hackernews <command> [args] [options]
+
+ask, best, jobs, new, read, search, show, top, user
+
+Commands:
+  ask [options]             [read] Hacker News Ask HN posts
+  best [options]            [read] Hacker News best stories
+  jobs [options]            [read] Hacker News job postings
+  new [options]             [read] Hacker News newest stories
+  read <id> [options]       [read] Read a Hacker News story and its comment tree
+  search <query> [options]  [read] Search Hacker News stories
+  show [options]            [read] Hacker News Show HN posts
+  top [options]             [read] Hacker News top stories
+  user <username>           [read] Hacker News user profile
+
+Common options:
+  -f, --format <fmt>  Output format: table, plain, json, yaml, md, csv  default: json  choices: table, plain, json, yaml, md, csv
+  --trace <mode>      Trace capture: off, on, retain-on-failure  default: off  choices: off, on, retain-on-failure
+  -v, --verbose       Debug output  default: false
+  -h, --help          display help for command
+
+Agent tip: use 'opencli hackernews --help -f json' to get all command args/options in one structured response.

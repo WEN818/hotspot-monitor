@@ -1,0 +1,15 @@
+Usage: opencli juejin <command> [args] [options]
+
+hot, recommend
+
+Commands:
+  hot [options]        [read] Juejin (掘金) hot article ranking, optionally scoped to a category
+  recommend [options]  [read] Juejin (掘金) homepage recommended article feed
+
+Common options:
+  -f, --format <fmt>  Output format: table, plain, json, yaml, md, csv  default: json  choices: table, plain, json, yaml, md, csv
+  --trace <mode>      Trace capture: off, on, retain-on-failure  default: off  choices: off, on, retain-on-failure
+  -v, --verbose       Debug output  default: false
+  -h, --help          display help for command
+
+Agent tip: use 'opencli juejin --help -f json' to get all command args/options in one structured response.
